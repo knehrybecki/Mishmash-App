@@ -1,0 +1,43 @@
+.main
+    display: flex
+    flex-direction: column
+
+    &__menu
+        margin-top: 100px
+
+.disable
+    pointer-events: none
+    opacity: 0.5
+    background-color: gray
+    transition: opacity 0.5s linear
+
+.menu
+    display: flex
+    justify-content: center
+    align-content: center
+    column-gap: 200px
+
+.fa-plus 
+    font-weight: 800
+    color: #0072af
+
+.fa-trash
+    color: #8a0101
+
+.fa-pen
+    color:#0072af
+    padding-left: 10px
+
+.list__text
+    pointer-events: none
+
+[contenteditable]
+    outline: 0px solid transparent
+
+.selected
+    pointer-events: none
+    background-color: #0072af
+
+.selected:hover
+    background-color: #0072af
+    opacity: 0.9
