@@ -3,7 +3,7 @@ import './Style/reset.css'
 import { createNodeRecipes, addIngredientsInRecipe } from './recipes'
 import { createMishmash, createNodeMishmash } from './mishmash'
 import { createNodeIngredients, createIngredients} from './ingredients'
-import $ from "jquery"
+import $ from 'jquery'
 
 export const ingredientsArray = new Map()
 
@@ -11,7 +11,7 @@ createNodeIngredients()
 createNodeRecipes()
 createNodeMishmash()
 
-export const ToogleIngredients = () => {
+export const toogleIngredients = () => {
   $('.menu__ingredients').addClass('selected')
   $('.menu__recipes').removeClass('selected')
 
@@ -75,8 +75,6 @@ export const toogleMishmash = () => {
   $('.content__mishmashList').show()
 }
 
-$('.menu__ingredients').click(ToogleIngredients)
+$('.menu__ingredients').click(toogleIngredients)
 $('.menu__recipes').click(toogleRecipes)
 $('.menu__mishmash').click(toogleMishmash)
-
-

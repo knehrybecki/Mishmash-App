@@ -49,7 +49,7 @@ describe('Mishmash', () => {
     })
 
     test('check DOM when click on the ingredients', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         expect($('.menu__ingredients').hasClass('selected')).toBeTruthy()
         expect($('.menu__recipes').hasClass('selected')).toBeFalsy()
@@ -77,7 +77,7 @@ describe('Mishmash', () => {
     })
 
     test('check DOM when click on the recipes', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         const text = 'mleko'
 
@@ -114,7 +114,7 @@ describe('Mishmash', () => {
     })
 
     test('check DOM when click on the mishmash', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         const text = 'mleko'
 

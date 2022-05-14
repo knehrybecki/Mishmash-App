@@ -1,8 +1,8 @@
 import $ from "jquery"
 
-export let objectRecipes = []
+export let arrayRecipes = []
 
-export let ingredientsRecipeArray = []
+export let ingredientsAddedToRecipeArray = []
 
 export const createNodeRecipes = () => {
     const recipes = $('<div>', { class: 'content__recipes' }).hide()
@@ -31,7 +31,6 @@ export const addIngredientsInRecipe = () => {
     $('.ingredients').addClass('recipes')
 
     $('.content--border').text('Wybierz Składniki i Dodaj Przepis')
-    
 
     $('.list-input').on('input', event => {
         $('.list-input').attr('value', $(event.target).val())
@@ -50,7 +49,7 @@ export const addIngredientsInRecipe = () => {
 
         $(event.target).addClass('selected')
 
-        ingredientsRecipeArray[ingredientsRecipeArray.length] = $(event.target).text()
+        ingredientsAddedToRecipeArray[ingredientsAddedToRecipeArray.length] = $(event.target).text()
 
         $('<p>', {
             class: 'create--ingredients',
@@ -81,16 +80,16 @@ const createlist = getInigredients => {
 export const addRecipeToList = event => {
     const getInigredients = $(event.target).parent('div').children('p')
 
-    objectRecipes = objectRecipes.concat([{
+    arrayRecipes = arrayRecipes.concat([{
         recipe: $('.list-input').val(),
-        ingredients: ingredientsRecipeArray.toString()
+        ingredients: ingredientsAddedToRecipeArray.toString()
     }])
 
     const newRecipe = createlist(getInigredients)
 
     newRecipe.appendTo($('.list'))
 
-    ResetInputRecipe()
+    resetInputRecipe()
 
     $('.list__delete').click(deleteRecipe)
 
@@ -99,8 +98,7 @@ export const addRecipeToList = event => {
     }
 }
 
-const ResetInputRecipe = () => {
-
+const resetInputRecipe = () => {
     $('.list-input').val('')
     $('.list--button-add').remove()
     $('.ingredients.recipes').removeClass('selected')
@@ -108,17 +106,15 @@ const ResetInputRecipe = () => {
     $('.menu__mishmash').css('pointer-events', 'auto')
     $('.menu__ingredients').css('pointer-events', 'auto')
 
-    ingredientsRecipeArray = []
+    ingredientsAddedToRecipeArray = []
 }
 
 export const deleteRecipe = event => {
-   const del = $(event.target).parent().children('p').remove()
+     $(event.target).parent().children('p').remove()
 
-    const nameRecipe = $(event.target).parent('li').text();
+    const nameRecipe = $(event.target).parent('li').text()
 
-    const findRecipe = objectRecipes.find(val => val.recipe === nameRecipe)
-
-    objectRecipes.splice(findRecipe, 1)
+    arrayRecipes = arrayRecipes.filter(item => item.recipe !== nameRecipe)
 
     $(event.target).parent().remove()
 }

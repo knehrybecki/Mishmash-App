@@ -3,8 +3,8 @@ import { createNodeIngredients } from '../ingredients'
 import { createNodeMishmash } from '../mishmash'
 import {
     createNodeRecipes,
-    ingredientsRecipeArray,
-    objectRecipes
+    ingredientsAddedToRecipeArray,
+    arrayRecipes
 } from '../recipes'
 import $ from 'jquery'
 
@@ -32,11 +32,11 @@ describe('Mishmash', () => {
     afterEach(() => {
         $(document.body).empty()
         main.ingredientsArray.clear()
-        objectRecipes.length = 0
+        arrayRecipes.length = 0
     })
 
     test('adding recipe to list', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         const text = 'mleko'
 
@@ -65,11 +65,11 @@ describe('Mishmash', () => {
 
         expect($('.create--ingredients').text()).toBe($('.ingredients__list').text())
 
-        expect(ingredientsRecipeArray.length).toBe(1)
+        expect(ingredientsAddedToRecipeArray.length).toBe(1)
 
         $('.list--button-add').click()
 
-        expect(objectRecipes.length).toBe(1)
+        expect(arrayRecipes.length).toBe(1)
 
         expect($('.list').has('.list__recipeName').length > 0).toBeTruthy()
 
@@ -91,11 +91,11 @@ describe('Mishmash', () => {
 
         expect($('.menu__ingredients').css('pointer-events')).toBe('auto')
 
-        expect(ingredientsRecipeArray.length).toBe(0)
+        expect(ingredientsAddedToRecipeArray.length).toBe(0)
     })
 
     test('deleted recipe', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         const text = 'mleko'
 
@@ -119,6 +119,6 @@ describe('Mishmash', () => {
 
         expect($('.list').has('.list__recipeName').length === 0).toBeTruthy()
 
-        expect(objectRecipes.length).toBe(0)
+        expect(arrayRecipes.length).toBe(0)
     })
 })

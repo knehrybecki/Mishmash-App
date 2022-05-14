@@ -1,5 +1,5 @@
-import $ from "jquery"
-import { objectRecipes } from "./recipes"
+import $ from 'jquery'
+import { arrayRecipes } from './recipes'
 
 export let selectedIngredients = []
 
@@ -34,13 +34,12 @@ export const createMishmash = () => {
 
     $('.ingredients.mishmash').click(event => {
         if ($(event.target).hasClass('selected')) {
-
             $(event.target).removeClass('selected')
 
-            const deleteIngredients = selectedIngredients.find(value => value === $(event.target).children().text())
-
-            selectedIngredients.splice(deleteIngredients, 1)
+            const nameIngredients = $(event.target).text()
             
+           selectedIngredients = selectedIngredients.filter(name => name !== nameIngredients)
+           
             if (selectedIngredients.length === 0) {
                 $('.mishmashList__recipe').hide(300)
         
@@ -64,15 +63,15 @@ export const createMishmash = () => {
     const createfiltrRecipes = () => {
         $('.mishmashList__recipe').remove()
      
-        let filtrRecipe = objectRecipes.find(val => val.ingredients === selectedIngredients.toString())
+        let findRecipe = arrayRecipes.find(val => val.ingredients === selectedIngredients.toString())
 
         const ingredientsRecipe = $('<p>', {
-            text: filtrRecipe.ingredients,
+            text: findRecipe.ingredients,
             class: 'recipe--ingredients'
         })
 
         const titleRecipe = $('<div>', {
-            text: filtrRecipe.recipe,
+            text: findRecipe.recipe,
             class: 'mishmashList__recipe'
         }).append(ingredientsRecipe).appendTo($('.mishmashList'))
 
@@ -80,5 +79,3 @@ export const createMishmash = () => {
         titleRecipe.show('slow')
     }
 }
-
-

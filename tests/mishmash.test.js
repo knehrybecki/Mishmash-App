@@ -3,7 +3,7 @@ import { createNodeIngredients } from '../ingredients'
 import { createNodeMishmash, selectedIngredients } from '../mishmash'
 import {
     createNodeRecipes,
-    objectRecipes
+    arrayRecipes
 } from '../recipes'
 import $ from 'jquery'
 
@@ -30,11 +30,11 @@ describe('Mishmash', () => {
 
     afterEach(() => {
         $(document.body).empty()
-        objectRecipes.length = 0
+        arrayRecipes.length = 0
     })
 
     test('find recipe', () => {
-        main.ToogleIngredients()
+        main.toogleIngredients()
 
         const text = 'mleko'
 

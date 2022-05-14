@@ -31,7 +31,7 @@ describe('Mishmash', () => {
   })
 
   test('add ingredients to list', () => {
-    main.ToogleIngredients()
+    main.toogleIngredients()
 
     expect($('.menu__ingredients').hasClass('selected')).toBeTruthy()
 
@@ -76,7 +76,7 @@ describe('Mishmash', () => {
   })
 
   test('Edit Ingredients', () => {
-    main.ToogleIngredients()
+    main.toogleIngredients()
 
     const text = 'mleko'
 
@@ -116,7 +116,7 @@ describe('Mishmash', () => {
   })
 
   test('deleted ingredients', () => {
-    main.ToogleIngredients()
+    main.toogleIngredients()
 
     const text = 'mleko'
 
