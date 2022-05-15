@@ -49,6 +49,10 @@ const createNewIngredientsItem = getText => {
 export const addIngredients = () => {
     const inputText = $('.input')
 
+    if (inputText.val() === '') {
+        return
+    }
+
     $('.menu__recipes').removeClass('disable')
 
     $('.content--border').text('Składniki')

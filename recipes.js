@@ -78,6 +78,10 @@ const createlist = getInigredients => {
 }
 
 export const addRecipeToList = event => {
+    if ($('.list-input').val() === '') {
+        return
+    }
+
     const getInigredients = $(event.target).parent('div').children('p')
 
     arrayRecipes = arrayRecipes.concat([{

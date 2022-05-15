@@ -65,6 +65,7 @@ export const toogleRecipes = () => {
 
 export const toogleMishmash = () => {
   $('.content__recipes').hide()
+  $('.ingredients-all-button').hide()
   $('.menu__mishmash').addClass('selected')
 
   $('.menu__ingredients').removeClass('selected')
