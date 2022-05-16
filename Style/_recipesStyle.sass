@@ -1,0 +1,75 @@
+.ingredients.recipes
+    min-width: 50px
+    display: flex
+    flex-flow: row wrap
+    justify-content: center
+    align-items: center
+    padding-left: 20px
+    padding-right: 20px
+
+.content__ingredients--list.recipes
+    display: flex
+    flex-flow: row
+    column-gap: 20px
+
+.ingredients.recipes:hover
+    background-color: $ingredientsHover
+    cursor: pointer
+
+.content__recipes
+    width: 80%
+    display: flex
+    flex-direction: column
+    
+.list-input
+    padding-bottom: 5px
+    border-bottom: 1px solid $black
+    padding-right: 30px
+
+.list-input:hover
+    opacity: 0.5
+
+.list--button-add
+    position: absolute
+    border: 1px solid
+    border-radius: 10px
+    padding: 5px
+    transform: translate(245px, 8px)
+
+.list--button-add:hover
+    background-color: $blueAny
+    opacity: 0.8
+
+.ingredients.recipes.selected
+    background-color: $blueAny
+    pointer-events: none
+
+.ingredients__list
+    pointer-events: none
+
+.recipes__list
+    margin: 30px 0px
+
+.list
+    display: flex
+    flex-flow: row wrap
+    column-gap: 60px
+    margin-bottom: 20px 
+
+.list__recipeName
+    list-style: auto
+    font-size: 25px
+    margin-bottom: 30px
+
+.create--ingredients
+    margin-top: 5px
+    font-size: 15px
+
+.list__delete
+    border: 1px solid
+    border-radius: 10px
+    font-size: 15px
+    padding: 5px
+
+.list__delete:hover
+    color: $deletedButton

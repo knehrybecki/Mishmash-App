@@ -1,0 +1,89 @@
+.menu
+    &__ingredients,
+    &__recipes,
+    &__mishmash
+        border: 1px solid $menuButton
+        padding: 10px
+        border-radius: 20px
+
+    &__ingredients:hover,
+    &__recipes:hover,
+    &__mishmash:hover
+        box-shadow: inset 0px -7px 24px -11px $menuButton
+        cursor: pointer
+
+.main__content
+    margin-top: 100px
+
+.content
+    display: flex
+    align-items: center
+    justify-content: center
+    flex-direction: column
+  
+.content--border
+    border-top: 1px solid $black
+    padding-top: 50px
+    padding-bottom: 50px
+    width: 70%
+    text-align: center
+    font-weight: 800
+    font-size: 25px
+
+.content__ingredients--input
+    display: flex
+    justify-content: center
+
+.input
+    position: relative
+    height: 35px
+    font-size: 15px
+    border: 1px solid $black
+    padding-left: 20px
+    border-radius: 10px
+    right: -12px
+
+.ingredients__button
+    position: relative
+    right: 20px
+    width: 31px
+    height: 37px
+    border-left: 1px solid $black
+
+.ingredients__button:hover
+    background-color: $black
+    color: $white
+    border-top-right-radius: 10px
+    border-bottom-right-radius: 10px
+    opacity: 0.8
+
+.content__ingredients--list
+    margin-top: 50px
+    display: flex
+    justify-content: center
+    flex-flow: column
+    row-gap: 20px
+
+.ingredients
+    min-width: 200px
+    height: 40px
+    border: 1px solid $black
+    border-radius: 20px
+    display: flex
+    align-items: center
+    padding-left: 10px
+    padding-right: 10px
+    justify-content: space-between
+
+.ingredients-all-button
+    display: flex
+    column-gap: 10px
+
+.ingredients__edit--ok
+    position: relative
+    left: 11px
+    width: 50px
+    height: 40px
+    border-top-right-radius: 20px
+    border-bottom-right-radius: 20px
+    background-color: $blueAny
