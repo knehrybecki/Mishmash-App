@@ -1,7 +1,6 @@
-import $ from "jquery"
+import $ from 'jquery'
 
 export let arrayRecipes = []
-
 export let ingredientsAddedToRecipeArray = []
 
 export const createNodeRecipes = () => {
@@ -114,7 +113,7 @@ const resetInputRecipe = () => {
 }
 
 export const deleteRecipe = event => {
-     $(event.target).parent().children('p').remove()
+    $(event.target).parent().children('p').remove()
 
     const nameRecipe = $(event.target).parent('li').text()
 
