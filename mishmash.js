@@ -1,16 +1,39 @@
 import $ from 'jquery'
-import { arrayRecipes } from './recipes'
 
 export let selectedIngredients = []
 
 export const createNodeMishmash = () => {
     $('<div>', {
         class: 'content__mishmashList'
-      }).appendTo($('.content')).hide()
-      
-      $('<div>', {
+    }).appendTo($('.content')).hide()
+
+    $('<div>', {
         class: 'mishmashList'
-      }).appendTo($('.content__mishmashList'))
+    }).appendTo($('.content__mishmashList'))
+}
+
+const getMishmashToBackEnd = async selectedIngredients => {
+    const recipe = await fetch('http://localhost:3001/api/mishmash', {
+        method: 'POST',
+        body: JSON.stringify({
+            selected: selectedIngredients
+        }),
+        headers: { "Content-Type": "application/json" }
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json()
+        }
+        
+        throw error
+      })
+      .catch(error => {
+        alert(error)
+
+        return null
+      })
+  
+    return recipe
 }
 
 export const createMishmash = () => {
@@ -33,16 +56,18 @@ export const createMishmash = () => {
     $('.content--border').addClass('mishmash')
 
     $('.ingredients.mishmash').click(event => {
-        if ($(event.target).hasClass('selected')) {
-            $(event.target).removeClass('selected')
+        const target = $(event.target)
 
-            const nameIngredients = $(event.target).text()
-            
-           selectedIngredients = selectedIngredients.filter(name => name !== nameIngredients)
-           
+        if (target.hasClass('selected')) {
+            target.removeClass('selected')
+
+            const ingredientUUID = target.children().attr('data-id')
+
+            selectedIngredients = selectedIngredients.filter(value => value !== ingredientUUID)
+
             if (selectedIngredients.length === 0) {
                 $('.mishmashList__recipe').hide(300)
-        
+
                 setTimeout(() => {
                     $('.mishmashList__recipe').remove()
                 }, 300)
@@ -51,31 +76,27 @@ export const createMishmash = () => {
             return
         }
 
-        $(event.target).addClass('selected')
+        target.addClass('selected')
 
         $('.ingredients.mishmash.selected').css('pointer-events', 'auto')
 
-        selectedIngredients[selectedIngredients.length] = $(event.target).children().text()
+        selectedIngredients[selectedIngredients.length] = target.children().attr('data-id')
 
         createfiltrRecipes()
     })
 
     const createfiltrRecipes = () => {
         $('.mishmashList__recipe').remove()
-     
-        let findRecipe = arrayRecipes.find(val => val.ingredients === selectedIngredients.toString())
 
-        const ingredientsRecipe = $('<p>', {
-            text: findRecipe.ingredients,
-            class: 'recipe--ingredients'
-        })
+        getMishmashToBackEnd(selectedIngredients)
+            .then(recipeNames => {
+                const titleRecipe = $('<div>', {
+                    text: recipeNames,
+                    class: 'mishmashList__recipe'
+                }).appendTo($('.mishmashList'))
 
-        const titleRecipe = $('<div>', {
-            text: findRecipe.recipe,
-            class: 'mishmashList__recipe'
-        }).append(ingredientsRecipe).appendTo($('.mishmashList'))
-
-        titleRecipe.hide()
-        titleRecipe.show('slow')
+                titleRecipe.hide()
+                titleRecipe.show('slow')
+            })
     }
 }

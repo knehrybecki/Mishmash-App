@@ -56,20 +56,24 @@
     column-gap: 60px
     margin-bottom: 20px 
 
-.list__recipeName
-    list-style: auto
-    font-size: 25px
-    margin-bottom: 30px
+    &__recipeName
+        list-style: auto
+        font-size: 25px
+        margin-bottom: 30px
+    
+    &__ingredients
+        font-size: 16px
+        padding: 5px
+
+    &__delete
+        border: 1px solid
+        border-radius: 10px
+        font-size: 15px
+        padding: 5px
+
+    &__delete:hover
+        color: $deletedButton
 
 .create--ingredients
     margin-top: 5px
     font-size: 15px
-
-.list__delete
-    border: 1px solid
-    border-radius: 10px
-    font-size: 15px
-    padding: 5px
-
-.list__delete:hover
-    color: $deletedButton

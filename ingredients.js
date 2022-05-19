@@ -1,6 +1,4 @@
-import { ingredientsArray } from './main'
 import $ from 'jquery'
-import { v4 as uuidv4 } from 'uuid'
 
 export const createNodeIngredients = () => {
     const content = $('.content')
@@ -10,7 +8,7 @@ export const createNodeIngredients = () => {
 
     $('<div>', {
         class: 'content--border',
-      }).prependTo(content)
+    }).prependTo(content)
 
     const inputDiv = $('<div>', { class: 'content__ingredients--input' })
 
@@ -34,16 +32,92 @@ export const createNodeIngredients = () => {
     ingredientsList.appendTo(content).hide()
 }
 
-const createNewIngredientsItem = getText => {
-    const list = $('<li>', {
-        class: 'ingredients'
-    }).append($('<p>', {
-        class: 'ingredients__list',
-        text: getText,
-        'data-id': uuidv4()
-    }))
+const sendIngredientsToBackEnd = inputText => {
+    const ingredient = fetch('http://localhost:3001/api/ingredient', {
+        method: 'POST',
+        body: JSON.stringify({ ingredientName: inputText }),
+        headers: { "Content-Type": "application/json" }
+    })
+        .then(res => {
+            if (res.ok) {
+                return res.json()
+            }
 
-    return list
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+
+    return ingredient
+}
+
+const editIngredientsToBackEnd = (text, id) => {
+    const ingredient = fetch('http://localhost:3001/api/ingredient', {
+        method: 'PUT',
+        body: JSON.stringify({
+            ingredientUUID: id,
+            ingredientName: text
+        }),
+        headers: { 'Content-type': 'application/json' },
+    })
+        .then(res => {
+            if (res.ok) {
+                return ingredient
+            }
+
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+}
+
+const deleteIngredientsToBackEnd = deleteID => {
+    const ingredient = fetch(`http://localhost:3001/api/ingredient?ingredientUUID=${deleteID}`, {
+        method: 'DELETE'
+    })
+        .then(res => {
+            if (res.ok) {
+                return ingredient
+            }
+            
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+}
+
+const createNewIngredientsItem = () => {
+    const ingredient = sendIngredientsToBackEnd($('.input').val())
+        .then(res => {
+            if (res !== null ){
+                const list = $('<li>', {
+                    class: 'ingredients'
+                }).append($('<p>', {
+                    class: 'ingredients__list',
+                    text: res.ingredientName,
+                    'data-id': res.ingredientUUID
+                }))
+         
+                return list
+            }
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+
+    return ingredient
 }
 
 export const addIngredients = () => {
@@ -53,22 +127,32 @@ export const addIngredients = () => {
         return
     }
 
-    $('.menu__recipes').removeClass('disable')
+    const newItem = createNewIngredientsItem()
 
-    $('.content--border').text('Składniki')
+    newItem
+        .then(res => {
+            if (res !== null) {
+                $('.menu__recipes').removeClass('disable')
 
-    const newItem = createNewIngredientsItem(inputText.val())
+                $('.content--border').text('Składniki')
 
-    newItem.appendTo($('.content__ingredients--list'))
+                res.appendTo($('.content__ingredients--list'))
 
-    createItemControls(newItem)
+                createItemControls(res)
 
-    ingredientsArray.set(newItem.children().attr('data-id'), inputText.val())
+                inputText.val(null)
 
-    inputText.val(null)
+                return
+            }
+
+            throw error
+        })
+        .catch(error => {
+            alert('wpisz nazwe składnika')
+        })
 }
 
-const createItemControls = newItem => {
+export const createItemControls = newItem => {
     const allButton = $('<div>', { class: 'ingredients-all-button' })
         .appendTo(newItem)
     const editButton = $('<button>', { class: 'ingredients__item-edit' })
@@ -86,60 +170,66 @@ const createItemControls = newItem => {
         .appendTo(newItem).hide()
 
     deleteButton.click(event => {
-        $(event.target)
+        const target = $(event.target)
+
+        target
             .closest('li').hide(400)
 
         setTimeout(() => {
-            $(event.target)
+            target
                 .closest('li')
                 .remove()
         }, 400)
 
-        const id = $(event.target)
+        const id = target
             .closest('li')
             .children('p')
             .attr('data-id')
 
-        ingredientsArray.delete(id)
+        deleteIngredientsToBackEnd(id)
     })
 
     editButton.click(event => {
-        $(event.target)
+        const target = $(event.target)
+
+        target
             .closest('li')
             .children('p')
             .attr('contentEditable', 'plaintext-only')
 
-        $(event.target)
+        target
             .closest('.ingredients-all-button')
             .hide()
 
-        $(event.target)
+        target
             .closest('li')
             .children('.ingredients__edit--ok')
             .show()
     })
 
     const createEditableText = event => {
-        const id = $(event.target)
+        const target = $(event.target)
+
+        const id = target
             .closest('li')
             .children('p')
             .attr('data-id')
 
-        const text = $(event.target).closest('li').children('p').text()
+        const text = target.closest('li').children('p').text()
 
-        ingredientsArray.set(id, text)
+        editIngredientsToBackEnd(text, id)
 
-        $(event.target)
+       target
             .closest('li')
             .children('p')
             .attr('contentEditable', false)
 
-        $(event.target)
+        target
             .closest('li')
             .children('.ingredients__edit--ok')
             .hide()
 
-        $(event.target)
+        target
             .closest('li')
             .children('.ingredients-all-button')
             .show()
@@ -165,4 +255,3 @@ export const createIngredients = () => {
         }
     })
 }
-

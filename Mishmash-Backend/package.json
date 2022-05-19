@@ -1,0 +1,20 @@
+{
+  "name": "mishmash-backend",
+  "private": true,
+  "version": "0.0.0",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "devDependencies": {
+    "jsonc-parser": "^3.0.0",
+    "vite": "^2.9.9",
+    "vite-plugin-node": "^1.0.0"
+  },
+  "dependencies": {
+    "cors": "^2.8.5",
+    "express": "^4.18.1",
+    "uuid": "^8.3.2"
+  }
+}

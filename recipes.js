@@ -1,6 +1,5 @@
 import $ from 'jquery'
 
-export let arrayRecipes = []
 export let ingredientsAddedToRecipeArray = []
 
 export const createNodeRecipes = () => {
@@ -24,18 +23,69 @@ export const createNodeRecipes = () => {
     }).appendTo($('.recipes__list'))
 }
 
+const sendRecipeToBackEnd = recipeName => {
+    const recipe = fetch('http://localhost:3001/api/recipes', {
+        method: 'POST',
+        body: JSON.stringify({
+            recipeName: recipeName,
+            ingredients: ingredientsAddedToRecipeArray
+        }),
+        headers: {
+            "Content-Type": "application/json"
+        }
+    })
+        .then(res => {
+            if (res.ok) {
+                return res.json()
+            }
+
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+
+    return recipe
+}
+
+const deleteRecipeToBackEnd = recipeID => {
+    const recipe = fetch(`http://localhost:3001/api/recipes?recipeUUID=${recipeID}`, {
+        method: 'DELETE'
+    })
+        .then(res => {
+            if (res.ok) {
+                return recipe
+            }
+
+            throw error
+        })
+        .catch(error => {
+            alert(error)
+
+            return null
+        })
+
+    return recipe
+}
+
 export const addIngredientsInRecipe = () => {
+    const input = $('.list-input')
+
     $('.content__ingredients--list').addClass('recipes')
 
     $('.ingredients').addClass('recipes')
 
     $('.content--border').text('Wybierz Składniki i Dodaj Przepis')
 
-    $('.list-input').on('input', event => {
-        $('.list-input').attr('value', $(event.target).val())
+    input.on('input', event => {
+        input.attr('value', $(event.target).val())
     })
 
     $('.ingredients.recipes').click(event => {
+        const target = $(event.target)
+
         $('.list--button-add').remove()
 
         $('.menu__ingredients').css('pointer-events', 'none')
@@ -46,78 +96,100 @@ export const addIngredientsInRecipe = () => {
             text: 'Dodaj przepis'
         }).prependTo($('.recipe__create'))
 
-        $(event.target).addClass('selected')
+        target.addClass('selected')
 
-        ingredientsAddedToRecipeArray[ingredientsAddedToRecipeArray.length] = $(event.target).text()
+        ingredientsAddedToRecipeArray = ingredientsAddedToRecipeArray.concat([{
+            ingredientUUID: target.children().attr('data-id'),
+            ingredientName: target.children().text()
+        }])
 
         $('<p>', {
             class: 'create--ingredients',
-            text: `${$(event.target).text()}`,
+            text: target.text(),
+            'data-id': target.children().attr('data-id')
         }).appendTo($('.recipe__create'))
 
         $('.list--button-add').click(addRecipeToList)
     })
 }
 
-const createlist = getInigredients => {
-    const list = $('<li>', {
-        class: 'list__recipeName',
-        text: $('.list-input').val(),
-    })
+const createlist = () => {
+    const recipe = sendRecipeToBackEnd($('.list-input').val())
+        .then(res => {
+                const list = $('<li>', {
+                    class: 'list__recipeName',
+                    text: res.recipeName,
+                    'data-id': res.recipeUUID,
+                })
+    
+                $('<p>', {
+                    class: 'list__ingredients',
+                    text: res.ingredients.map(ingredient => ingredient.ingredientName),
+                    'data-id': res.ingredients.map(ingredient => ingredient.ingredientUUID),
+                }).appendTo(list)
+    
+                $('<input>', {
+                    type: 'button',
+                    class: 'list__delete',
+                    value: 'Usuń',
+                }).appendTo(list)
+    
+                return list
+        })
+        .catch(error => {
+            alert(error)
+            
+            return null
+        })
 
-    getInigredients.appendTo(list)
-
-    $('<input>', {
-        type: 'button',
-        class: 'list__delete',
-        value: 'Usuń',
-    }).appendTo(list)
-
-    return list
+    return recipe
 }
 
-export const addRecipeToList = event => {
+export const addRecipeToList = () => {
     if ($('.list-input').val() === '') {
         return
     }
 
-    const getInigredients = $(event.target).parent('div').children('p')
+    const newRecipe = createlist()
 
-    arrayRecipes = arrayRecipes.concat([{
-        recipe: $('.list-input').val(),
-        ingredients: ingredientsAddedToRecipeArray.toString()
-    }])
+    newRecipe
+    .then(res => {
+        if (res !== null) {
+            res.appendTo($('.list'))
 
-    const newRecipe = createlist(getInigredients)
+            resetInputRecipe()
 
-    newRecipe.appendTo($('.list'))
-
-    resetInputRecipe()
+            return
+        }
+      throw error
+    })
+    .catch(error => alert(error))
 
     $('.list__delete').click(deleteRecipe)
-
-    if($('.menu__mishmash').hasClass('disable')) {
-        $('.menu__mishmash').removeClass('disable')
-    }
 }
 
 const resetInputRecipe = () => {
     $('.list-input').val('')
+
     $('.list--button-add').remove()
+    $('.create--ingredients').remove()
+
     $('.ingredients.recipes').removeClass('selected')
 
-    $('.menu__mishmash').css('pointer-events', 'auto')
+    $('.menu__mishmash')
+        .css('pointer-events', 'auto')
+        .removeClass('disable')
+
     $('.menu__ingredients').css('pointer-events', 'auto')
 
     ingredientsAddedToRecipeArray = []
 }
 
 export const deleteRecipe = event => {
-    $(event.target).parent().children('p').remove()
 
-    const nameRecipe = $(event.target).parent('li').text()
+    const recipeID = $(event.target).parent('li').attr('data-id')
 
-    arrayRecipes = arrayRecipes.filter(item => item.recipe !== nameRecipe)
+    deleteRecipeToBackEnd(recipeID)
 
     $(event.target).parent().remove()
 }
