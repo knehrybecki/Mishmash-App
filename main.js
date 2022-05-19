@@ -16,15 +16,36 @@ import {
 } from './ingredients'
 import $ from 'jquery'
 
+
 let arrayRecipes = []
 let ingredientsArray = []
 
-const getIngredientsToBackEnd = async () => {
-  return await fetch('http://localhost:3001/api/ingredient').then(res => res.json())
+const getIngredientsToBackEnd = () => {
+  const getIngredient = fetch('http://localhost:3001/api/ingredient')
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+    return getIngredient
 }
 
-const getRecipesToBackEnd = async () => {
-  return await fetch('http://localhost:3001/api/recipes').then(res => res.json())
+const getRecipesToBackEnd = () => {
+  const getRecipe = fetch('http://localhost:3001/api/recipes')
+    .then(res => {
+      if (res.ok) {
+        return res.json()
+      }
+    })
+    .catch(error => {
+      console.log(error)
+    })
+
+    return getRecipe
 }
 
 createNodeIngredients()
@@ -46,7 +67,7 @@ getRecipesToBackEnd().then((listRecipes) => {
     }).appendTo($('.list'))
 
     $('<p>', {
-      class: 'create--ingredients',
+      class: 'list__ingredients',
       text: value.ingredients.map(value => value.ingredientName)
     }).appendTo(list)
 

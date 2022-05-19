@@ -11,43 +11,38 @@ let listIngredients = []
 let listRecipes = []
 
 app.route('/api/ingredient')
-
   .get((req, res) => {
     res.json(listIngredients)
   })
-
   .post((req, res) => {
     const uuid = uuidv4()
-    const name = req.body.ingredientName
+    const nameIngredient = req.body.ingredientName
 
-    if (name === '') {
-      res.statusCode = 404
+    if (nameIngredient === '') {
       res.status(404).end()
     }
 
     listIngredients = listIngredients.concat([{
       ingredientUUID: uuid,
-      ingredientName: req.body.ingredientName
+      ingredientName: nameIngredient
     }])
 
     res.json({
       ingredientUUID: uuid,
-      ingredientName: req.body.ingredientName
+      ingredientName: nameIngredient
     })
   })
-
   .put((req, res) => {
     const id = req.body.ingredientUUID
-    const name = req.body.ingredientName
+    const nameIngredient = req.body.ingredientName
     
-    const rename = listIngredients.find(value => value.ingredientUUID === id)
+    const renameIngredient = listIngredients.find(value => value.ingredientUUID === id)
 
-    if (!rename) {
-      res.statusCode = 404
+    if (!renameIngredient) {
       res.status(404).end()
     }
 
-    rename.ingredientName = name
+    renameIngredient['ingredientName'] = nameIngredient
 
     res.status(200).end()
   })
@@ -56,7 +51,6 @@ app.route('/api/ingredient')
     const dataID = req.query.ingredientUUID
 
     if (listIngredients.findIndex(value => value.ingredientUUID === dataID) === -1) {
-      res.statusCode = 404
       res.status(404).end()
     }
 
@@ -66,11 +60,9 @@ app.route('/api/ingredient')
   })
 
 app.route('/api/recipes')
-
   .get((req, res) => {
     res.json(listRecipes)
   })
-
   .post((req, res) => {
     const uuid = uuidv4()
 
@@ -80,15 +72,16 @@ app.route('/api/recipes')
       ingredients: req.body.ingredients,
     }])
 
-    res.status(200).end()
+    res.json({
+      recipeUUID: uuid,
+      recipeName: req.body.recipeName,
+      ingredients: req.body.ingredients,
+    })
   })
-
-
   .delete((req, res) => {
     const ingredient = listRecipes.find(value => value.recipeUUID === req.query.recipeUUID)
 
-    if ( !ingredient) {
-      res.statusCode = 404
+    if (!ingredient) {
         res.status(404).end()
     }
 
@@ -96,7 +89,6 @@ app.route('/api/recipes')
 
     res.status(200).end()
   })
-
 
 app.route('/api/mishmash')
   .post((req, res) => {

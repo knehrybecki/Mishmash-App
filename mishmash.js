@@ -1,4 +1,3 @@
-
 import $ from 'jquery'
 
 export let selectedIngredients = []
@@ -14,7 +13,7 @@ export const createNodeMishmash = () => {
 }
 
 const getMishmashToBackEnd = async selectedIngredients => {
-    return await fetch('http://localhost:3001/api/mishmash', {
+    const recipe = await fetch('http://localhost:3001/api/mishmash', {
         method: 'POST',
         body: JSON.stringify({
             selected: selectedIngredients
@@ -22,7 +21,17 @@ const getMishmashToBackEnd = async selectedIngredients => {
         headers: {
             "Content-Type": "application/json"
         }
-    }).then(res => res.json())
+    })
+    .then(res => {
+        if (res.ok) {
+          return res.json()
+        }
+      })
+      .catch(error => {
+        console.log(error)
+      })
+  
+    return recipe
 }
 
 export const createMishmash = () => {
@@ -45,11 +54,12 @@ export const createMishmash = () => {
     $('.content--border').addClass('mishmash')
 
     $('.ingredients.mishmash').click(event => {
+        const target = $(event.target)
 
-        if ($(event.target).hasClass('selected')) {
-            $(event.target).removeClass('selected')
+        if (target.hasClass('selected')) {
+            target.removeClass('selected')
 
-            const ingredientUUID = $(event.target).children().attr('data-id')
+            const ingredientUUID = target.children().attr('data-id')
 
             selectedIngredients = selectedIngredients.filter(value => value !== ingredientUUID)
 
@@ -64,11 +74,11 @@ export const createMishmash = () => {
             return
         }
 
-        $(event.target).addClass('selected')
+        target.addClass('selected')
 
         $('.ingredients.mishmash.selected').css('pointer-events', 'auto')
 
-        selectedIngredients[selectedIngredients.length] = $(event.target).children().attr('data-id')
+        selectedIngredients[selectedIngredients.length] = target.children().attr('data-id')
 
         createfiltrRecipes()
     })
