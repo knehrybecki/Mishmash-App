@@ -38,26 +38,32 @@ const sendRecipeToBackEnd = recipeName => {
             if (res.ok) {
                 return res.json()
             }
+
+            throw error
         })
         .catch(error => {
-            console.log(error)
+            alert(error)
         })
 
     return sendRecipe
 }
 
 const deleteRecipeToBackEnd = recipeID => {
-    const deleteRecipe = fetch(`http://localhost:3001/api/recipes?recipeUUID=${recipeID}`, {
+    const recipe = fetch(`http://localhost:3001/api/recipes?recipeUUID=${recipeID}`, {
         method: 'DELETE'
     })
         .then(res => {
             if (res.ok) {
                 return deleteRecipe
             }
+
+            throw error
         })
         .catch(error => {
-            console.log(error)
+            alert(error)
         })
+
+    return recipe
 }
 
 export const addIngredientsInRecipe = () => {
@@ -125,6 +131,9 @@ const createlist = () => {
             }).appendTo(list)
 
             return list
+        })
+        .catch(error => {
+            alert(error)
         })
 
     return sendRecipe

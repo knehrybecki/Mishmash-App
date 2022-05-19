@@ -16,45 +16,43 @@ app.route('/api/ingredient')
   })
   .post((req, res) => {
     const uuid = uuidv4()
-    const nameIngredient = req.body.ingredientName
+    const ingredientName = req.body.ingredientName
 
-    if (nameIngredient === '') {
+    if (ingredientName === '') {
       res.status(404).end()
     }
 
     listIngredients = listIngredients.concat([{
       ingredientUUID: uuid,
-      ingredientName: nameIngredient
+      ingredientName: ingredientName
     }])
 
     res.json({
       ingredientUUID: uuid,
-      ingredientName: nameIngredient
+      ingredientName: ingredientName
     })
   })
   .put((req, res) => {
     const id = req.body.ingredientUUID
-    const nameIngredient = req.body.ingredientName
+    const ingredientName = req.body.ingredientName
     
-    const renameIngredient = listIngredients.find(value => value.ingredientUUID === id)
-
-    if (!renameIngredient) {
+    const renamed = [listIngredients.find(value => value.ingredientUUID === id)]
+ 
+    if (!renamed) {
       res.status(404).end()
     }
-
-    renameIngredient['ingredientName'] = nameIngredient
-
+   
+    renamed.filter(ingredient => ingredient.ingredientName = ingredientName)
     res.status(200).end()
   })
-
   .delete((req, res) => {
-    const dataID = req.query.ingredientUUID
+    const ingredientUUID = req.query.ingredientUUID
 
-    if (listIngredients.findIndex(value => value.ingredientUUID === dataID) === -1) {
+    if (listIngredients.findIndex(value => value.ingredientUUID === ingredientUUID) === -1) {
       res.status(404).end()
     }
 
-    listIngredients = listIngredients.filter(value => value.ingredientUUID !== dataID)
+    listIngredients = listIngredients.filter(value => value.ingredientUUID !== ingredientUUID)
 
     res.status(200).end()
   })
@@ -65,16 +63,21 @@ app.route('/api/recipes')
   })
   .post((req, res) => {
     const uuid = uuidv4()
+    const recipeName = req.body.recipeName
+
+    if (recipeName === '') {
+      res.status(404).end()
+    }
 
     listRecipes = listRecipes.concat([{
       recipeUUID: uuid,
-      recipeName: req.body.recipeName,
+      recipeName: recipeName,
       ingredients: req.body.ingredients,
     }])
 
     res.json({
       recipeUUID: uuid,
-      recipeName: req.body.recipeName,
+      recipeName: recipeName,
       ingredients: req.body.ingredients,
     })
   })

@@ -16,7 +16,6 @@ import {
 } from './ingredients'
 import $ from 'jquery'
 
-
 let arrayRecipes = []
 let ingredientsArray = []
 
@@ -26,9 +25,10 @@ const getIngredientsToBackEnd = () => {
       if (res.ok) {
         return res.json()
       }
+      throw error
     })
     .catch(error => {
-      console.log(error)
+      alert(error)
     })
 
     return getIngredient
@@ -40,9 +40,10 @@ const getRecipesToBackEnd = () => {
       if (res.ok) {
         return res.json()
       }
+      throw error
     })
     .catch(error => {
-      console.log(error)
+      alert(error)
     })
 
     return getRecipe

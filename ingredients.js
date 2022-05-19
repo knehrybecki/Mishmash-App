@@ -33,58 +33,63 @@ export const createNodeIngredients = () => {
 }
 
 const sendIngredientsToBackEnd = inputText => {
-    const sendIngredient = fetch('http://localhost:3001/api/ingredient', {
+    const ingredient = fetch('http://localhost:3001/api/ingredient', {
         method: 'POST',
         body: JSON.stringify({ ingredientName: inputText }),
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" }
     })
         .then(res => {
             if (res.ok) {
                 return res.json()
             }
+            throw error
         })
         .catch(error => {
-            console.log(error)
+           alert(error)
         })
 
-    return sendIngredient
+    return ingredient
 }
 
 const editIngredientsToBackEnd = (text, id) => {
-    const editIngredient = fetch('http://localhost:3001/api/ingredient', {
+    const ingredient = fetch('http://localhost:3001/api/ingredient', {
         method: 'PUT',
         body: JSON.stringify({
             ingredientUUID: id,
             ingredientName: text
         }),
-        headers: {
-            'Content-type': 'application/json'
-        },
+        headers: { 'Content-type': 'application/json' },
     })
         .then(res => {
             if (res.ok) {
-                return editIngredient
+                return ingredient
             }
+
+            throw error
         })
         .catch(error => {
-            console.log(error)
+            alert(error)
         })
+        
+        return ingredient
 }
 
 const deleteIngredientsToBackEnd = deleteID => {
-    const deleteIngredient = fetch(`http://localhost:3001/api/ingredient?ingredientUUID=${deleteID}`, {
+    const ingredient = fetch(`http://localhost:3001/api/ingredient?ingredientUUID=${deleteID}`, {
         method: 'DELETE'
     })
         .then(res => {
             if (res.ok) {
                 return deleteIngredient
             }
+            
+            throw error
         })
         .catch(error => {
-            console.log(error)
+            alert(error)
         })
+
+    return ingredient
 }
 
 const createNewIngredientsItem = () => {
@@ -97,9 +102,13 @@ const createNewIngredientsItem = () => {
                 text: res.ingredientName,
                 'data-id': res.ingredientUUID
             }))
-
+     
             return list
         })
+        .catch(error => {
+            alert(error)
+        })
+
     return sendIngredient
 }
 

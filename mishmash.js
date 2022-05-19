@@ -18,17 +18,17 @@ const getMishmashToBackEnd = async selectedIngredients => {
         body: JSON.stringify({
             selected: selectedIngredients
         }),
-        headers: {
-            "Content-Type": "application/json"
-        }
+        headers: { "Content-Type": "application/json" }
     })
     .then(res => {
         if (res.ok) {
           return res.json()
         }
+        
+        throw error
       })
       .catch(error => {
-        console.log(error)
+        alert(error)
       })
   
     return recipe
