@@ -1,6 +1,5 @@
-import { ingredientsArray } from './main'
-import $ from 'jquery'
 import { v4 as uuidv4 } from 'uuid'
+import $ from 'jquery'
 
 export const createNodeIngredients = () => {
     const content = $('.content')
@@ -34,7 +33,38 @@ export const createNodeIngredients = () => {
     ingredientsList.appendTo(content).hide()
 }
 
+const sendIngredientsToBackEnd = inputText => {
+    fetch('http://localhost:3001/api/ingredient', {
+        method: 'POST',
+        body: JSON.stringify({ingredientName: inputText}),
+        headers: {
+          "Content-Type": "application/json"
+        }
+    })
+}
+
+const editIngredientsToBackEnd = (text, id) => {
+    fetch('http://localhost:3001/api/ingredient', {
+        method: 'PUT',
+        body: JSON.stringify({
+        ingredientUUID: id,
+        ingredientName: text
+    }),
+        headers: {
+            'Content-type': 'application/json'
+        },
+    })
+}
+
+const deleteIngredientsToBackEnd = deleteID => {
+    fetch(`http://localhost:3001/api/ingredient?ingredientUUID=${deleteID}`, {
+        method: 'DELETE'
+    })
+}
+
 const createNewIngredientsItem = getText => {
+    sendIngredientsToBackEnd($('.input').val())
+
     const list = $('<li>', {
         class: 'ingredients'
     }).append($('<p>', {
@@ -53,9 +83,9 @@ export const addIngredients = () => {
         return
     }
 
-    $('.menu__recipes').removeClass('disable')
-
     $('.content--border').text('Składniki')
+
+    $('.menu__recipes').removeClass('disable')
 
     const newItem = createNewIngredientsItem(inputText.val())
 
@@ -63,12 +93,10 @@ export const addIngredients = () => {
 
     createItemControls(newItem)
 
-    ingredientsArray.set(newItem.children().attr('data-id'), inputText.val())
-
     inputText.val(null)
 }
 
-const createItemControls = newItem => {
+export const createItemControls = newItem => {
     const allButton = $('<div>', { class: 'ingredients-all-button' })
         .appendTo(newItem)
     const editButton = $('<button>', { class: 'ingredients__item-edit' })
@@ -99,8 +127,8 @@ const createItemControls = newItem => {
             .closest('li')
             .children('p')
             .attr('data-id')
-
-        ingredientsArray.delete(id)
+    
+       deleteIngredientsToBackEnd(id)
     })
 
     editButton.click(event => {
@@ -127,7 +155,7 @@ const createItemControls = newItem => {
 
         const text = $(event.target).closest('li').children('p').text()
 
-        ingredientsArray.set(id, text)
+        editIngredientsToBackEnd(text, id)
 
         $(event.target)
             .closest('li')
