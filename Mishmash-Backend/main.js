@@ -38,7 +38,9 @@ app.route('/api/ingredient')
     const id = req.body.ingredientUUID
     const ingredientName = req.body.ingredientName
 
-    if (!renamed) {
+   const findIngredient =  listIngredients.find(value => value.ingredientUUID === id)
+
+    if (!findIngredient) {
       res.status(404).end()
     }
     

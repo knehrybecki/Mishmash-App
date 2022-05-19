@@ -29,6 +29,8 @@ const getMishmashToBackEnd = async selectedIngredients => {
       })
       .catch(error => {
         alert(error)
+
+        return null
       })
   
     return recipe
@@ -86,14 +88,15 @@ export const createMishmash = () => {
     const createfiltrRecipes = () => {
         $('.mishmashList__recipe').remove()
 
-        getMishmashToBackEnd(selectedIngredients).then(recipeNames => {
-            const titleRecipe = $('<div>', {
-                text: recipeNames,
-                class: 'mishmashList__recipe'
-            }).appendTo($('.mishmashList'))
+        getMishmashToBackEnd(selectedIngredients)
+            .then(recipeNames => {
+                const titleRecipe = $('<div>', {
+                    text: recipeNames,
+                    class: 'mishmashList__recipe'
+                }).appendTo($('.mishmashList'))
 
-            titleRecipe.hide()
-            titleRecipe.show('slow')
-        })
+                titleRecipe.hide()
+                titleRecipe.show('slow')
+            })
     }
 }

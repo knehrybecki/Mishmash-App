@@ -30,6 +30,8 @@ const getIngredientsToBackEnd = async () => {
     })
     .catch(error => {
       alert(error)
+
+      return null
     })
 
     return ingredient
@@ -45,6 +47,8 @@ const getRecipesToBackEnd = () => {
     })
     .catch(error => {
       alert(error)
+
+      return null
     })
 
     return recipe
