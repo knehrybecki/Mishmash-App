@@ -86,7 +86,7 @@ export const createMishmash = () => {
     const createfiltrRecipes = () => {
         $('.mishmashList__recipe').remove()
 
-        getMishmashToBackEnd(selectedIngredients).then((recipeNames) => {
+        getMishmashToBackEnd(selectedIngredients).then(recipeNames => {
             const titleRecipe = $('<div>', {
                 text: recipeNames,
                 class: 'mishmashList__recipe'

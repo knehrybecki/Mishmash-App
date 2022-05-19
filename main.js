@@ -19,23 +19,24 @@ import $ from 'jquery'
 let arrayRecipes = []
 let ingredientsArray = []
 
-const getIngredientsToBackEnd = () => {
-  const getIngredient = fetch('http://localhost:3001/api/ingredient')
+const getIngredientsToBackEnd = async () => {
+  const ingredient = await fetch('http://localhost:3001/api/ingredient')
     .then(res => {
       if (res.ok) {
         return res.json()
       }
+
       throw error
     })
     .catch(error => {
       alert(error)
     })
 
-    return getIngredient
+    return ingredient
 }
 
 const getRecipesToBackEnd = () => {
-  const getRecipe = fetch('http://localhost:3001/api/recipes')
+  const recipe = fetch('http://localhost:3001/api/recipes')
     .then(res => {
       if (res.ok) {
         return res.json()
@@ -46,14 +47,14 @@ const getRecipesToBackEnd = () => {
       alert(error)
     })
 
-    return getRecipe
+    return recipe
 }
 
 createNodeIngredients()
 createNodeRecipes()
 createNodeMishmash()
 
-getRecipesToBackEnd().then((listRecipes) => {
+getRecipesToBackEnd().then(listRecipes => {
   arrayRecipes = arrayRecipes.concat(listRecipes)
 
   if (arrayRecipes.length > 0) {
@@ -82,25 +83,29 @@ getRecipesToBackEnd().then((listRecipes) => {
   $('.list__delete').click(deleteRecipe)
 })
 
-getIngredientsToBackEnd().then((listIngredients) => {
-  ingredientsArray = ingredientsArray.concat(listIngredients)
+getIngredientsToBackEnd()
+  .then(listIngredients => {
+      ingredientsArray = ingredientsArray.concat(listIngredients)
 
-  if (ingredientsArray.length > 0) {
-    $('.menu__recipes').removeClass('disable')
-  }
+      if (ingredientsArray.length > 0) {
+        $('.menu__recipes').removeClass('disable')
 
-  ingredientsArray.forEach(value => {
-    const list = $('<li>', {
-      class: 'ingredients'
-    }).append($('<p>', {
-      class: 'ingredients__list',
-      text: value.ingredientName,
-      'data-id': value.ingredientUUID
-    })).appendTo($('.content__ingredients--list'))
+        $('.content--border').text('Składniki')
+      }
 
-    createItemControls(list)
+      ingredientsArray.forEach(value => {
+        const list = $('<li>', {
+          class: 'ingredients'
+        }).append($('<p>', {
+          class: 'ingredients__list',
+          text: value.ingredientName,
+          'data-id': value.ingredientUUID
+        })).appendTo($('.content__ingredients--list'))
+
+        createItemControls(list)
+      })
   })
-})
+
 
 export const toogleIngredients = () => {
   $('.menu__ingredients').addClass('selected')

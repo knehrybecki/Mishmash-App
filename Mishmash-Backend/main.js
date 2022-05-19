@@ -17,9 +17,11 @@ app.route('/api/ingredient')
   .post((req, res) => {
     const uuid = uuidv4()
     const ingredientName = req.body.ingredientName
-
+    
     if (ingredientName === '') {
       res.status(404).end()
+
+      return
     }
 
     listIngredients = listIngredients.concat([{
@@ -35,14 +37,14 @@ app.route('/api/ingredient')
   .put((req, res) => {
     const id = req.body.ingredientUUID
     const ingredientName = req.body.ingredientName
-    
-    const renamed = [listIngredients.find(value => value.ingredientUUID === id)]
- 
+
     if (!renamed) {
       res.status(404).end()
     }
-   
-    renamed.filter(ingredient => ingredient.ingredientName = ingredientName)
+    
+    listIngredients.filter(value => value.ingredientUUID === id)
+      .map(value => value.ingredientName = ingredientName)
+
     res.status(200).end()
   })
   .delete((req, res) => {
@@ -67,6 +69,8 @@ app.route('/api/recipes')
 
     if (recipeName === '') {
       res.status(404).end()
+
+      return
     }
 
     listRecipes = listRecipes.concat([{

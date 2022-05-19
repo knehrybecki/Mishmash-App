@@ -24,7 +24,7 @@ export const createNodeRecipes = () => {
 }
 
 const sendRecipeToBackEnd = recipeName => {
-    const sendRecipe = fetch('http://localhost:3001/api/recipes', {
+    const recipe = fetch('http://localhost:3001/api/recipes', {
         method: 'POST',
         body: JSON.stringify({
             recipeName: recipeName,
@@ -43,9 +43,11 @@ const sendRecipeToBackEnd = recipeName => {
         })
         .catch(error => {
             alert(error)
+
+            return null
         })
 
-    return sendRecipe
+    return recipe
 }
 
 const deleteRecipeToBackEnd = recipeID => {
@@ -54,13 +56,15 @@ const deleteRecipeToBackEnd = recipeID => {
     })
         .then(res => {
             if (res.ok) {
-                return deleteRecipe
+                return recipe
             }
 
             throw error
         })
         .catch(error => {
             alert(error)
+
+            return null
         })
 
     return recipe
@@ -96,7 +100,7 @@ export const addIngredientsInRecipe = () => {
 
         ingredientsAddedToRecipeArray = ingredientsAddedToRecipeArray.concat([{
             ingredientUUID: target.children().attr('data-id'),
-            ingredientName: $(event.target).children().text()
+            ingredientName: target.children().text()
         }])
 
         $('<p>', {
@@ -110,33 +114,35 @@ export const addIngredientsInRecipe = () => {
 }
 
 const createlist = () => {
-    const sendRecipe = sendRecipeToBackEnd($('.list-input').val())
+    const recipe = sendRecipeToBackEnd($('.list-input').val())
         .then(res => {
-            const list = $('<li>', {
-                class: 'list__recipeName',
-                text: res.recipeName,
-                'data-id': res.recipeUUID,
-            })
-
-            $('<p>', {
-                class: 'list__ingredients',
-                text: res.ingredients.map(ingredient => ingredient.ingredientName),
-                'data-id': res.ingredients.map(ingredient => ingredient.ingredientUUID),
-            }).appendTo(list)
-
-            $('<input>', {
-                type: 'button',
-                class: 'list__delete',
-                value: 'Usuń',
-            }).appendTo(list)
-
-            return list
+                const list = $('<li>', {
+                    class: 'list__recipeName',
+                    text: res.recipeName,
+                    'data-id': res.recipeUUID,
+                })
+    
+                $('<p>', {
+                    class: 'list__ingredients',
+                    text: res.ingredients.map(ingredient => ingredient.ingredientName),
+                    'data-id': res.ingredients.map(ingredient => ingredient.ingredientUUID),
+                }).appendTo(list)
+    
+                $('<input>', {
+                    type: 'button',
+                    class: 'list__delete',
+                    value: 'Usuń',
+                }).appendTo(list)
+    
+                return list
         })
         .catch(error => {
             alert(error)
+            
+            return null
         })
 
-    return sendRecipe
+    return recipe
 }
 
 export const addRecipeToList = () => {
@@ -146,11 +152,18 @@ export const addRecipeToList = () => {
 
     const newRecipe = createlist()
 
-    newRecipe.then(res => {
-        res.appendTo($('.list'))
+    newRecipe
+    .then(res => {
+        if (res !== null) {
+            res.appendTo($('.list'))
 
-        resetInputRecipe()
+            resetInputRecipe()
+
+            return
+        }
+      throw error
     })
+    .catch(error => alert(error))
 
     $('.list__delete').click(deleteRecipe)
 }

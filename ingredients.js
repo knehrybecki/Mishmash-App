@@ -42,10 +42,13 @@ const sendIngredientsToBackEnd = inputText => {
             if (res.ok) {
                 return res.json()
             }
+
             throw error
         })
         .catch(error => {
-           alert(error)
+            alert(error)
+
+            return null
         })
 
     return ingredient
@@ -69,9 +72,9 @@ const editIngredientsToBackEnd = (text, id) => {
         })
         .catch(error => {
             alert(error)
+
+            return null
         })
-        
-        return ingredient
 }
 
 const deleteIngredientsToBackEnd = deleteID => {
@@ -80,36 +83,41 @@ const deleteIngredientsToBackEnd = deleteID => {
     })
         .then(res => {
             if (res.ok) {
-                return deleteIngredient
+                return ingredient
             }
             
             throw error
         })
         .catch(error => {
             alert(error)
-        })
 
-    return ingredient
+            return null
+        })
 }
 
 const createNewIngredientsItem = () => {
-    const sendIngredient = sendIngredientsToBackEnd($('.input').val())
+    const ingredient = sendIngredientsToBackEnd($('.input').val())
         .then(res => {
-            const list = $('<li>', {
-                class: 'ingredients'
-            }).append($('<p>', {
-                class: 'ingredients__list',
-                text: res.ingredientName,
-                'data-id': res.ingredientUUID
-            }))
-     
-            return list
+            if (res !== null ){
+                const list = $('<li>', {
+                    class: 'ingredients'
+                }).append($('<p>', {
+                    class: 'ingredients__list',
+                    text: res.ingredientName,
+                    'data-id': res.ingredientUUID
+                }))
+         
+                return list
+            }
+            throw error
         })
         .catch(error => {
             alert(error)
+
+            return null
         })
 
-    return sendIngredient
+    return ingredient
 }
 
 export const addIngredients = () => {
@@ -119,19 +127,29 @@ export const addIngredients = () => {
         return
     }
 
-    $('.content--border').text('Składniki')
-
-    $('.menu__recipes').removeClass('disable')
-
     const newItem = createNewIngredientsItem()
 
-    newItem.then(res => {
-        res.appendTo($('.content__ingredients--list'))
+    newItem
+        .then(res => {
+            if (res !== null) {
+                $('.menu__recipes').removeClass('disable')
 
-        createItemControls(res)
-    })
+                $('.content--border').text('Składniki')
 
-    inputText.val(null)
+                res.appendTo($('.content__ingredients--list'))
+
+                createItemControls(res)
+
+                inputText.val(null)
+
+                return
+            }
+
+            throw error
+        })
+        .catch(error => {
+            alert('wpisz nazwe składnika')
+        })
 }
 
 export const createItemControls = newItem => {
